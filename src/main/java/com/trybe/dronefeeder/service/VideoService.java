@@ -6,6 +6,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
 
 import com.trybe.dronefeeder.domain.Video;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -30,17 +31,26 @@ public class VideoService {
 
   private static final String DIRECTORY = directory();
 
-  /** Directory method. */
+  /**
+   * Method that sets the video upload and downlaod directory.
+   * 
+   * @return a directory String.
+   */
   public static String directory() {
     String env = System.getenv("DIRECTORY");
     if (env == null) {
-      return System.getProperty("user.dir") + "/src/main/resources";
+      String defaultDirectory = StringUtils.cleanPath(System.getProperty("user.dir")
+          + "/src/main/resources/videos");
+      new File(defaultDirectory).mkdir();
+      return defaultDirectory;
     }
     return env;
   }
 
   /**
-   * List all videos service.
+   * Method that query all the available videos.
+   * 
+   * @return a list of Videos.
    */
   public List<Video> findAll() {
     File file = new File(DIRECTORY);
@@ -55,23 +65,33 @@ public class VideoService {
   }
 
   /**
-   * Video upload service.
+   * Method that manages the video upload feature.
+   * 
+   * @param multipartFiles an upload MultipartFile object.
+   * @return a list of Videos.
+   * @throws IOException in case of access errors (if the temporary store fails).
    */
   public List<Video> upload(
       List<MultipartFile> multipartFiles) throws IOException {
-    List<Video> fileNames = new ArrayList<>();
+    List<Video> videos = new ArrayList<>();
     for (MultipartFile file : multipartFiles) {
       String fileName = StringUtils.cleanPath(file.getOriginalFilename());
       Path fileStorage = get(DIRECTORY, fileName).toAbsolutePath();
       copy(file.getInputStream(), fileStorage, REPLACE_EXISTING);
       Video video = new Video(fileName);
       video.setDownloadUrl(fileName);
-      fileNames.add(video);
+      videos.add(video);
     }
-    return fileNames;
+    return videos;
   }
 
-  /** Video download service. */
+  /**
+   * Method that manages the video downlaoad feature.
+   * 
+   * @param fileName the downloaded file name String.
+   * @return a Map with the http required parameters.
+   * @throws IOException if the download file doesn't exist.
+   */
   public Map<String, Object> download(
       @PathVariable("filename") String fileName) throws IOException {
     Path filePath = get(DIRECTORY).toAbsolutePath().normalize().resolve(fileName);
