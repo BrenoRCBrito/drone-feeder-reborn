@@ -19,6 +19,6 @@ spring:
       hibernate:
         generate-ddl: true
         dialect: org.hibernate.dialect.MySQL8Dialect
-        
+
 server:
   port: 8080
