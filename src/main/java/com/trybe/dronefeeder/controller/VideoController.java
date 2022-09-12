@@ -26,12 +26,25 @@ public class VideoController {
   @Autowired
   VideoService videoService;
 
+  /**
+   * FindAll Video Controller.
+   * 
+   * @return ResponseEntity Object with status 200 and a body with all videos.
+   */
   @GetMapping()
   public ResponseEntity<List<Video>> findAll() {
     List<Video> videos = videoService.findAll();
     return ResponseEntity.ok(videos);
   }
 
+  /**
+   * Video Upload Controller.
+   * 
+   * @param multipartFiles segmented files from the uploaded video.
+   * @return ResponseEntity Object with status 200 and a body with the uploaded
+   *         file names.
+   * @throws IOException in case of access errors (if the temporary store fails).
+   */
   @PostMapping("/upload")
   public ResponseEntity<List<Video>> upload(
       @RequestParam("files") List<MultipartFile> multipartFiles) throws IOException {
@@ -39,7 +52,14 @@ public class VideoController {
     return ResponseEntity.ok().body(fileNames);
   }
 
-  /** Video download endpoint. */
+  /**
+   * Video Download Controller.
+   * 
+   * @param fileName name of the download file.
+   * @return ResponseEntity Object with status 200 and a body with the requested
+   *         video.
+   * @throws IOException if the download file doesn't exist.
+   */
   @GetMapping("/download/{filename}")
   public ResponseEntity<Resource> download(
       @PathVariable("filename") String fileName) throws IOException {

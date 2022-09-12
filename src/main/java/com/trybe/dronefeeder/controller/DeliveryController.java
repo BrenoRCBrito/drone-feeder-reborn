@@ -1,15 +1,14 @@
 package com.trybe.dronefeeder.controller;
 
-import com.trybe.dronefeeder.dto.DeliveryDto;
-import com.trybe.dronefeeder.model.DeliveryModel;
+import com.trybe.dronefeeder.contract.requests.DeliveryRequest;
+import com.trybe.dronefeeder.contract.response.DeliveryResponse;
 import com.trybe.dronefeeder.service.DeliveryService;
 
 import java.util.List;
-
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,40 +25,69 @@ public class DeliveryController {
   @Autowired
   private DeliveryService deliveryService;
 
-  /** create controller. */
+  /**
+   * Create Delivery Controller.
+   * 
+   * @param delivery DeliveryRequest Object.
+   * @return ResponseEntity Object with status 201 and a body with the created
+   *         delivery.
+   */
   @PostMapping()
-  public ResponseEntity<DeliveryModel> create(@RequestBody DeliveryDto delivery) {
-    DeliveryModel deliveryCreated = deliveryService.create(delivery);
+  public ResponseEntity<DeliveryResponse> create(@RequestBody DeliveryRequest delivery) {
+    DeliveryResponse deliveryCreated = deliveryService.create(delivery);
     return ResponseEntity.status(HttpStatus.CREATED).body(deliveryCreated);
   }
 
-  /** getAll controller. */
+  /**
+   * FindAll Delivery Controller.
+   * 
+   * @return ResponseEntity Object with status 200 and a body with all deliveries.
+   */
   @GetMapping()
-  public ResponseEntity<List<DeliveryModel>> findAll() {
-    List<DeliveryModel> delivery = deliveryService.findAll();
+  public ResponseEntity<List<DeliveryResponse>> findAll() {
+    List<DeliveryResponse> delivery = deliveryService.findAll();
     return ResponseEntity.status(HttpStatus.OK).body(delivery);
   }
 
-  /** findById controller. */
+  /**
+   * FindById Delivery Controller.
+   * 
+   * @param id Long Object with the requested delivery id.
+   * @return ResponseEntity Object with status 200 and a body with the requested
+   *         delivery.
+   */
   @GetMapping("/{id}")
-  public ResponseEntity<DeliveryModel> findById(@PathVariable("id") Long id) {
-    DeliveryModel delivery = deliveryService.findById(id);
+  public ResponseEntity<DeliveryResponse> findById(@PathVariable("id") UUID id) {
+    DeliveryResponse delivery = deliveryService.findById(id);
     return ResponseEntity.ok(delivery);
   }
 
-  /** update controller. */
+  /**
+   * Update Delivery Controller.
+   * 
+   * @param delivery DeliveryRequest Object with all the updates.
+   * @param id       Long Object with the requested delivery id.
+   * @return ResponseEntity Object with status 200 and a body with the updated
+   *         delivery.
+   */
   @PutMapping("/{id}")
-  public ResponseEntity<DeliveryModel> edit(
-      @RequestBody DeliveryDto delivery,
-      @PathVariable("id") Long id) {
-    DeliveryModel edited = deliveryService.update(delivery, id);
+  public ResponseEntity<DeliveryResponse> update(
+      @RequestBody DeliveryRequest delivery,
+      @PathVariable("id") UUID id) {
+    DeliveryResponse edited = deliveryService.update(delivery, id);
     return ResponseEntity.status(HttpStatus.OK).body(edited);
   }
 
-  /** delete controller. */
+  /**
+   * Delete Delivery Controller.
+   * 
+   * @param id Long Object with the requested delivery id.
+   * @return ResponseEntity Object with status 200 and a body with the deleted
+   *         delivery.
+   */
   @DeleteMapping("/{id}")
-  public ResponseEntity<DeliveryModel> delete(@PathVariable("id") Long id) {
-    DeliveryModel removed = deliveryService.delete(id);
+  public ResponseEntity<DeliveryResponse> delete(@PathVariable("id") UUID id) {
+    DeliveryResponse removed = deliveryService.delete(id);
     return ResponseEntity.status(HttpStatus.OK).body(removed);
   }
 }
