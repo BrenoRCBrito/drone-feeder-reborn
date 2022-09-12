@@ -1,17 +1,16 @@
 package com.trybe.dronefeeder.exceptions;
 
-public class GenericError {
-  private String message;
-  
-  public GenericError(String message) {
-    this.message = message;
-  }
-  
-  public String getMessage() {
-    return this.message;
-  }
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-  public void setMessage(String message) {
-    this.message = message;
-  }
+@Getter
+@Setter
+@EqualsAndHashCode
+@AllArgsConstructor
+public class GenericError {
+
+  private String message;
+
 }
