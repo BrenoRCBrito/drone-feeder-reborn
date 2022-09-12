@@ -15,10 +15,11 @@ spring:
   jpa:
     show-sql: true
     hibernate.ddl-auto: update
+    open-in-view: false
     properties:
       hibernate:
         generate-ddl: true
         dialect: org.hibernate.dialect.H2Dialect
-        
+
 server:
   port: 8080
